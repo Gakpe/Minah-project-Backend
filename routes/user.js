@@ -57,7 +57,6 @@ const login = async (user, done) => {
 
 /* Attach middleware to login endpoint */
 router.post("/login", passport.authenticate("magic"), (req, res) => {
-    console.log('HERE')
   if (req.user) {
       res.status(200).end('User is logged in.');
   } else {

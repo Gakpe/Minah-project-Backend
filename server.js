@@ -9,8 +9,8 @@ require('dotenv').config();
 const db = require("./config/db");
 
 const indexRouter = require("./routes/index");
-const userRouter = require("./routes/user");
-//const authRouter = require("./routes/authRoutes")
+//const userRouter = require("./routes/user");
+const authRouter = require("./routes/authRoutes")
 
 const app = express();
 app.set("trust proxy", 1);
@@ -46,12 +46,12 @@ db.once("open", () => {
 
   // Routes
   app.use("/", indexRouter);
-  app.use("/user", userRouter);
+  app.use("/user", authRouter);
 
   // Start the server
-  const listener = app.listen(8080, "0.0.0.0", function () {
-    console.log(
-      "Listening on " + listener.address().address + ":" + listener.address().port
-    );
-  });
+    const port = process.env.PORT || 8087;
+    const listener = app.listen(port, "0.0.0.0", function () {
+        console.log("Listening on " + listener.address().address + ":" + listener.address().port);
+    });
+
 });
