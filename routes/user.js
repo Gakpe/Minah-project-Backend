@@ -31,7 +31,11 @@ passport.use(strategy);
 
 /* Implement User Signup */
 const signup = async (user, userMetadata, done) => {
+  const lastUser = await users.findOne({}, { sort: { userId: -1 } });
+  const nextUserId = lastUser ? (parseInt(lastUser.userId) + 1).toString().padStart(3, '0') : '001';
+
   let newUser = {
+    userId: nextUserId,
     issuer: user.issuer,
     email: userMetadata.email,
     lastLoginAt: user.claim.iat

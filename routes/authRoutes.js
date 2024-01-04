@@ -25,23 +25,17 @@ router.put('/update', upload.single('image'), async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        // Update user information
         ['address', 'first_name', 'last_name'].forEach(field => {
             if (req.body[field]) existingUser[field] = req.body[field];
         });
 
-        // Handle and save image if provided
         if (req.file) {
-            // Assuming 'image' is the field name for the file in the request
-            // Save the image to your desired location or cloud storage
-            // For simplicity, we are storing the image in the user object here
             existingUser.image = {
                 data: req.file.buffer.toString('base64'),
                 contentType: req.file.mimetype
             };
         }
 
-        // Save the updated user
         await existingUser.save();
         
         res.status(200).json({ message: 'User updated', user: existingUser });
@@ -50,18 +44,25 @@ router.put('/update', upload.single('image'), async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-// ... (your existing code for session behavior)
 
-router.get('/', async (req, res) => {
-    // ... (your existing code for the user endpoint)
-});
+// Delete route
+router.delete('/delete/:issuer', async (req, res) => {
+    // Check authentication if needed
+    // if (!req.user) return res.status(401).end('User not authenticated.');
 
-router.post('/buy-apple', async (req, res) => {
-    // ... (your existing code for buying an apple)
-});
+    try {
+        // Find and delete the user based on the issuer field
+        const deletedUser = await userModel.findOneAndDelete({ issuer: req.params.issuer });
 
-router.post('/logout', async (req, res) => {
-    // ... (your existing code for logout)
+        if (!deletedUser) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'User deleted', user: deletedUser });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
 module.exports = router;

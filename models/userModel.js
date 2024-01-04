@@ -2,13 +2,19 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
   issuer: String,
+  userId: { type: String, unique: true }, 
+  nationality: String,
   first_name: String,
   last_name: String,
   address: String,
-  image: Object,
-  email: String,
-  lastLoginAt: Number,
-  appleCount: { type: Number, default: 0 },
+  profilePicture: String,
+  email: { type: String, unique: true }, 
+  investor: Boolean,
+  loginCount: Number,
+  accountVerified: Boolean,
+  totalAmountInvested: Number,
+  amountInvested: [{ amount: String, timestamp: Date }],
+  lastLoginAt: Date, 
 });
 
 module.exports = mongoose.model('User', userSchema);
