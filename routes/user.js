@@ -16,6 +16,7 @@ const MagicStrategy = require("passport-magic").Strategy;
 const strategy = new MagicStrategy(async function(user, done) {
   const userMetadata = await magic.users.getMetadataByIssuer(user.issuer);
   const existingUser = await users.findOne({ issuer: user.issuer });
+  // console.log("existing user",existingUser)
   if (!existingUser) {
     /* Create new user if doesn't exist */
     return signup(user, userMetadata, done);

@@ -10,29 +10,31 @@ const db = require("./config/db");
 
 const indexRouter = require("./routes/index");
 //const userRouter = require("./routes/user");
-const authRouter = require("./routes/authRoutes")
+const projectRouter = require('./routes/projectRoutes')
+const authRouter = require("./routes/userRoutes")
+const accountRouter = require("./routes/accountRoutes")
 
 const app = express();
 app.set("trust proxy", 1);
-app.set("view engine", "ejs");
+// app.set("view engine", "ejs");
 
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-app.use(
-  session({
-    secret: "not my cat's name",
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      maxAge: 60 * 60 * 1000, // 1 hour
-      // secure: true, // Uncomment this line to enforce HTTPS protocol.
-      sameSite: true
-    }
-  })
-);
+// app.use(
+//   session({
+//     secret: "not my cat's name",
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: {
+//       maxAge: 60 * 60 * 1000, // 1 hour
+//       // secure: true, // Uncomment this line to enforce HTTPS protocol.
+//       sameSite: true
+//     }
+//   })
+// );
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -47,6 +49,8 @@ db.once("open", () => {
   // Routes
   app.use("/", indexRouter);
   app.use("/user", authRouter);
+  app.use("/project", projectRouter)
+  app.use("/account", accountRouter)
 
   // Start the server
     const port = process.env.PORT || 8087;
