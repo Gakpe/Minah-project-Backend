@@ -2,21 +2,21 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const session = require("express-session");
-const passport = require("passport");
+/* const session = require("express-session");
+ */ const passport = require("passport");
 const cors = require("cors"); // Import the cors middleware
-require('dotenv').config();
+require("dotenv").config();
 const db = require("./config/db");
 
 const indexRouter = require("./routes/index");
 //const userRouter = require("./routes/user");
-const projectRouter = require('./routes/projectRoutes')
-const authRouter = require("./routes/userRoutes")
-const accountRouter = require("./routes/accountRoutes")
+const projectRouter = require("./routes/projectRoutes");
+const authRouter = require("./routes/userRoutes");
+const accountRouter = require("./routes/accountRoutes");
 
 const app = express();
 app.set("trust proxy", 1);
-// app.set("view engine", "ejs");
+app.set("view engine", "ejs");
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -49,13 +49,17 @@ db.once("open", () => {
   // Routes
   app.use("/", indexRouter);
   app.use("/user", authRouter);
-  app.use("/project", projectRouter)
-  app.use("/account", accountRouter)
+  app.use("/project", projectRouter);
+  app.use("/account", accountRouter);
 
   // Start the server
-    const port = process.env.PORT || 8087;
-    const listener = app.listen(port, "0.0.0.0", function () {
-        console.log("Listening on " + listener.address().address + ":" + listener.address().port);
-    });
-
+  const port = process.env.PORT || 8087;
+  const listener = app.listen(port, "0.0.0.0", function () {
+    console.log(
+      "Listening on " +
+        listener.address().address +
+        ":" +
+        listener.address().port
+    );
+  });
 });
