@@ -1,24 +1,33 @@
 const passport = require("passport");
-const { Strategy: MagicStrategy } = require("passport-magic");
+const CustomStrategy = require('passport-custom');
 const magic = require("../config/magic");
 const { login, signup } = require("../services/userService");
 const userModel = require("../models/userModel")
 
-const strategy = new MagicStrategy(async function (user, done) {
-  const userMetadata = await magic.users.getMetadataByIssuer(user.issuer);
-  const existingUser = await userModel.findOne({ issuer: user.issuer });
+passport.use('magic', new CustomStrategy(async function (req, done) {
+  const { token } = req.query;
+  console.log(token);
+  const authHeader = req.headers['authorization'];
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7); 
+
+      const userMetadata = await magic.users.getMetadataByToken(token);
+      console.log(userMetadata);
+  const existingUser = await userModel.findOne({ issuer: userMetadata.issuer });
   console.log("I am here")
 
   if (!existingUser) {
     /* Create a new user if doesn't exist */
     console.log("Existing",existingUser)
-    return signup(user, userMetadata, done);
+    return signup( userMetadata, done);
   } else {
     /* Login user if otherwise */
     console.log("Login")
-    return login(user, done);
+    done(null, userMetadata);
+    return userMetadata;
   }
-});
+}
+}));
 passport.serializeUser((user, done) => {
   console.log("----------user", user);
   console.log("----------user.issuer", user.issuer);
@@ -33,6 +42,5 @@ passport.deserializeUser(async (id, done) => {
     done(err, null);
   }
 });
-passport.use(strategy);
 
 module.exports = passport;

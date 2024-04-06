@@ -1,23 +1,12 @@
 const userModel = require("../models/userModel");
 
 /* Implement Auth Behaviors */
-exports.signup = async (user, userMetadata, done) => {
+exports.signup = async (userMetadata, done) => {
   try {
-    const lastUser = await userModel.findOne({}, { userId: 1 }, { sort: { userId: -1 } });
-
-    let nextUserId;
-    if (lastUser && lastUser.userId) {
-      const lastNumericUserId = parseInt(lastUser.userId?.replace(/^0+/, "") || '0', 10);
-      nextUserId = String(lastNumericUserId + 1).padStart(3, '0');
-    } else {
-      nextUserId = '001';
-    }
-
+   
     let newUser = new userModel({
-      userId: nextUserId,
-      issuer: user.issuer,
-      email: userMetadata.email,
-      lastLoginAt: user.claim.iat,
+      issuer: userMetadata.issuer,
+      email: userMetadata.email
     });
 
     newUser.id = newUser._id;

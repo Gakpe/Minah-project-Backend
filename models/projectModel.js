@@ -4,7 +4,10 @@ const projectSchema = new mongoose.Schema({
   totalAmountInvested: Number,
   maxAmountReached: Boolean,
   associatedInvestor: Array,
-  totalInvestors: Number
+  totalInvestors: Number,
+  image:String,
+  name:String,
+  description:String,
 });
 
 module.exports = mongoose.model('Project', projectSchema);

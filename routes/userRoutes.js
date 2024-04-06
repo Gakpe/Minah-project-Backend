@@ -7,13 +7,19 @@ const router = express.Router();
 const storage = multer.memoryStorage(); // Use memory storage for simplicity
 const upload = multer({ storage: storage });
 
-router.post('/login', passport.authenticate('magic'), (req, res) => {
+router.post('/login',passport.authenticate('magic'),  (req, res) => {
+  console.log(req,"here here")
     if (req.user) {
         res.status(200).json({ message: 'User is logged in', user: req.user });
     } else {
         return res.status(401).end('Could not log the user in.');
     }
 });
+// router.get('/passportAuth', passport.authenticate('magic', {
+//   successRedirect: '/user/login',
+//   failureRedirect: '/user/error',
+//   failureFlash: false
+// }));
 
 router.get("/get", async (req, res) => {
     if (req.isAuthenticated()) {
