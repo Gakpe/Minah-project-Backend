@@ -9,6 +9,8 @@ exports.signup = async (userMetadata, done) => {
       email: userMetadata.email
     });
 
+    
+
     await newUser.save();
     return done(null, newUser);
   } catch (error) {
