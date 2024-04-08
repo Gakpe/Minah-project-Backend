@@ -32,7 +32,7 @@ router.get("/get", async (req, res) => {
 router.put('/:issuer', upload.none(), async (req, res) => {
     try {
       const existingUser = await userModel.findOne({ issuer: req.params.issuer });
-  
+      
       if (!existingUser) {
         return res.status(404).json({ error: 'User not found' });
       }

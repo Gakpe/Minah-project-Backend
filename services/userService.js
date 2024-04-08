@@ -3,13 +3,12 @@ const userModel = require("../models/userModel");
 /* Implement Auth Behaviors */
 exports.signup = async (userMetadata, done) => {
   try {
-   
+    console.log(userMetadata);
     let newUser = new userModel({
       issuer: userMetadata.issuer,
       email: userMetadata.email
     });
 
-    newUser.id = newUser._id;
     await newUser.save();
     return done(null, newUser);
   } catch (error) {
