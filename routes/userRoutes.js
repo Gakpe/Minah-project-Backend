@@ -96,7 +96,6 @@ router.delete('/delete/:issuer', async (req, res) => {
         if (!deletedUser) {
             return res.status(404).json({ error: 'User not found' });
         }
-
         res.status(200).json({ message: 'User deleted', user: deletedUser });
     } catch (error) {
         console.error(error);
