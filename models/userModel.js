@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
   last_name: String,
   address: String,
   profilePicture: String,
-  email: { type: String, unique: true }, 
+  email: String, 
   investor: Boolean,
   loginCount: Number,
   accountVerified: Boolean,
