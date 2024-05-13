@@ -13,15 +13,12 @@ router.post('/login', passport.authenticate('magic'), async (req, res) => {
     if (!userData) {
       return res.status(401).json({ message: 'User does not exist.' });
     }
-      console.log("before createdAt = ", userData);
       if (!userData.createdAt) {
-      console.log("in the !createdAt");
       userData = await userModel.findOneAndUpdate(
         { issuer: req.user.issuer },
         { $set: { createdAt: new Date() } },
         { new: true }
       );
-      console.log("User data after = ", userData);
     }
     res.status(200).json({ message: 'User is logged in', user: req.user, userData: userData });
   } else {
