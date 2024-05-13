@@ -13,7 +13,8 @@ const userSchema = new mongoose.Schema({
   accountVerified: Boolean,
   totalAmountInvested: Number,
   amountInvested: [{ amount: String, timestamp: Date }],
-  lastLoginAt: Date, 
+  lastLoginAt: Date,
+  createdAt: Date
 });
 
 module.exports = mongoose.model('User', userSchema);

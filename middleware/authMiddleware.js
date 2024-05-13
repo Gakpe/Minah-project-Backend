@@ -6,7 +6,7 @@ const userModel = require("../models/userModel")
 
 passport.use('magic', new CustomStrategy(async function (req, done) {
   const { token } = req.query;
-  console.log(token);
+  console.log("Token = ", token);
   const authHeader = req.headers['authorization'];
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const token = authHeader.substring(7); 
