@@ -7,14 +7,25 @@ const router = express.Router();
 const storage = multer.memoryStorage(); // Use memory storage for simplicity
 const upload = multer({ storage: storage });
 
-router.post('/login',passport.authenticate('magic'),  (req, res) => {
-  console.log(req,"here here")
-    if (req.user) {
-        res.status(200).json({ message: 'User is logged in', user: req.user });
-    } else {
-        return res.status(401).end('Could not log the user in.');
+router.post('/login', passport.authenticate('magic'), async (req, res) => {
+  if (req.user) {
+    let userData = await userModel.findOne({ issuer: req.user.issuer });
+    if (!userData) {
+      return res.status(401).json({ message: 'User does not exist.' });
     }
+      if (!userData.createdAt) {
+      userData = await userModel.findOneAndUpdate(
+        { issuer: req.user.issuer },
+        { $set: { createdAt: new Date() } },
+        { new: true }
+      );
+    }
+    res.status(200).json({ message: 'User is logged in', user: req.user, userData: userData });
+  } else {
+    return res.status(401).end('Could not log the user in.');
+  }
 });
+
 // router.get('/passportAuth', passport.authenticate('magic', {
 //   successRedirect: '/user/login',
 //   failureRedirect: '/user/error',
@@ -22,7 +33,7 @@ router.post('/login',passport.authenticate('magic'),  (req, res) => {
 // }));
 
 router.get("/get", async (req, res) => {
-    if (req.isAuthenticated()) {
+    if (req.authenticate()) {
       return res.status(200).json(req.user).end();
     } else {
       return res.status(401).end(`User is not logged in.`);
