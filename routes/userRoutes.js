@@ -20,6 +20,7 @@ router.post('/login', passport.authenticate('magic'), async (req, res) => {
         { new: true }
       );
     }
+    console.log("userData = ", userData);
     res.status(200).json({ message: 'User is logged in', user: req.user, userData: userData });
   } else {
     return res.status(401).end('Could not log the user in.');
