@@ -21,7 +21,7 @@ router.post('/login', passport.authenticate('magic'), async (req, res) => {
       );
     }
     console.log("userData = ", userData);
-    res.status(200).json({ message: 'User is logged in', user: req.user, userData: userData });
+    return res.status(200).json({ message: 'User is logged in', user: req.user, userData: userData });
   } else {
     return res.status(401).end('Could not log the user in.');
   }
@@ -33,12 +33,18 @@ router.post('/login', passport.authenticate('magic'), async (req, res) => {
 //   failureFlash: false
 // }));
 
-router.get("/get", async (req, res) => {
-    if (req.authenticate()) {
-      return res.status(200).json(req.user).end();
-    } else {
-      return res.status(401).end(`User is not logged in.`);
+router.get("/get", passport.authenticate('magic'), async (req, res) => {
+  if (req.user) {
+    let userData = await userModel.findOne({ issuer: req.user.issuer });
+    console.log("userData= ", userData);
+    if (!userData) {
+      return res.status(401).json({ message: 'User does not exist.' });
     }
+    res.status(200).json({userData: userData});
+  } else {
+    return res.status(401).end('Could not autenticate the user in.');
+  }
+
 });
 
 router.put('/:issuer', upload.none(), async (req, res) => {

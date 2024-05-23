@@ -13,15 +13,12 @@ passport.use('magic', new CustomStrategy(async function (req, done) {
       const userMetadata = await magic.users.getMetadataByToken(token);
       console.log(userMetadata);
   const existingUser = await userModel.findOne({ issuer: userMetadata.issuer });
-  console.log("I am here")
 
   if (!existingUser) {
     /* Create a new user if doesn't exist */
-    console.log("Existing",existingUser)
     return signup( userMetadata, done);
   } else {
     /* Login user if otherwise */
-    console.log("Login")
     done(null, userMetadata);
     return userMetadata;
   }
